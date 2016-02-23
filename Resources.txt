@@ -19,3 +19,7 @@ https://kenai.com/projects/nblatex/downloads
 http://plugins.netbeans.org/plugin/5749/tex-language-support
 https://netbeans.org/project_downloads/contrib/LaTeX%20module%20docs/installation.html
 
+Netbeans Platform Starter (Video):
+https://www.youtube.com/watch?v=9qLow-aRS9s
+
+
