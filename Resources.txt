@@ -1,0 +1,33 @@
+// List of useful links for creating the plugin
+********* GOOGLE DOCS *****************
+Resources:
+https://docs.google.com/document/d/1OTgQ5SpiZVFeDaoY46xy5-ijNtEghoYAUgP-QjsJkcQ/edit
+
+Netbeans API docs:
+https://docs.google.com/document/d/1c_ukcW1J1r6K27Umn2qS21Gp9fh3Di0VhdplU4g_Gqg/edit
+
+Requirements Documentation
+https://docs.google.com/document/d/1pIOJFVKThK-c50uhZWURKys95ZAJa0xuG3RAGIoroHI/edit?usp=sharing
+
+Netbeans plugin quickstart:
+https://platform.netbeans.org/tutorials/nbm-google.html
+
+Netbeans plugin intro:
+https://netbeans.org/kb/trails/platform.html
+
+Netbeans plugin wiki:
+http://wiki.netbeans.org/IntroNetBeansPluginDev
+
+Netbeans API index:
+http://bits.netbeans.org/8.0/javadoc/
+
+
+Netbeans Plugin Examples:
+https://kenai.com/projects/nblatex/downloads
+http://plugins.netbeans.org/plugin/5749/tex-language-support
+https://netbeans.org/project_downloads/contrib/LaTeX%20module%20docs/installation.html
+
+Netbeans Platform Starter (Video):
+https://www.youtube.com/watch?v=9qLow-aRS9s
+
+
