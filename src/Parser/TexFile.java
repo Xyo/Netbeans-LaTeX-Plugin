@@ -6,11 +6,11 @@ package Parser;
  * 
  * Represents some basic info about the document
  */
-public class Document {
+public class TexFile {
     private int numLines;
     private String filename;
     
-    Document( String filename ){
+    TexFile( String filename ){
         this.filename = filename;
     }
     
@@ -29,5 +29,13 @@ public class Document {
             this.numLines = num;
             return true;
         }
+    }
+    
+    public String getFilePath(){
+        return filename;
+    }
+    
+    public int numOfLines(){
+        return numLines;
     }
 }

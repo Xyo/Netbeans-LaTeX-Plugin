@@ -1,5 +1,8 @@
 package org.Netex.Outline.Window;
 
+import javax.swing.JScrollPane;
+import javax.swing.JTree;
+import javax.swing.tree.DefaultMutableTreeNode;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -76,7 +79,12 @@ public final class OutlineWindowTopComponent extends TopComponent {
     // End of variables declaration//GEN-END:variables
     @Override
     public void componentOpened() {
-        // TODO add custom code on component opening
+        DefaultMutableTreeNode title =
+        new DefaultMutableTreeNode("Title");
+        addNewNode(title);
+        jScrollPane1 = new JScrollPane(jTree2);
+        jScrollPane2 = new JScrollPane(jTree2);
+        
     }
 
     @Override
@@ -84,6 +92,17 @@ public final class OutlineWindowTopComponent extends TopComponent {
         // TODO add custom code on component closing
     }
 
+    private void addNewNode(DefaultMutableTreeNode node){
+        
+    }
+    
+    public DefaultMutableTreeNode addNode(Parser.Segment part){
+        DefaultMutableTreeNode node = new DefaultMutableTreeNode(part);
+        return node;
+    }
+    
+    
+    
     void writeProperties(java.util.Properties p) {
         // better to version settings since initial version as advocated at
         // http://wiki.apidesign.org/wiki/PropertyFiles
@@ -95,4 +114,6 @@ public final class OutlineWindowTopComponent extends TopComponent {
         String version = p.getProperty("version");
         // TODO read your settings according to their version
     }
+    
+   
 }

@@ -15,27 +15,13 @@ import java.util.TreeSet;
 
 
 public abstract class Segment implements Comparable{
+    private String name;
     private Integer begin = 0;
     private Integer end = 0;
     private boolean correct;
-    private Set<Segment> children;
     
     Segment(Integer lineStart){
         this.begin = lineStart;
-        children = new TreeSet<>();
-    }
-    
-    // @param Returns an arraylist of the segment's child segments
-    public List<Segment> getChildren(){
-        List<Segment> children = new ArrayList<>();
-        if( this.children.isEmpty() ){
-            return null;
-        }else{
-            for( Segment seg : this.children ){
-                children.add(seg);
-            }
-        }
-        return children;
     }
     
     public int getLineStart() {
@@ -46,18 +32,26 @@ public abstract class Segment implements Comparable{
         return end;
     }
     
-    public boolean isComplete() {
+    public boolean isCorrect() {
         return correct;
     }
     
-    public void setComplete(){
+    public void setCorrect(){
         if( end > 0 ){
             correct = true;
         }
     }
     
-    public void setIncomplete(){
+    public void setIncorrect(){
         correct = false;
+    }
+    
+    public void setName(String name){
+        this.name = name;
+    }
+    
+    public String getName(){
+        return name;
     }
     
     @Override
