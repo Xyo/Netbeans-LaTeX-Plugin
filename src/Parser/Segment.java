@@ -14,13 +14,14 @@ import java.util.TreeSet;
  */
 
 
-public abstract class Segment implements Comparable{
+public class Segment implements Comparable{
     private String name;
     private Integer begin = 0;
     private Integer end = 0;
     private boolean correct;
     
-    Segment(Integer lineStart){
+    Segment(String name, Integer lineStart){
+        this.name = name;
         this.begin = lineStart;
     }
     
@@ -64,5 +65,10 @@ public abstract class Segment implements Comparable{
         if( seg == null || !(seg instanceof Segment) ) return false;
         
         return this.begin == ((Segment)seg).getLineStart();
+    }
+
+    @Override
+    public String toString(){
+        return name + ": " + begin + " - " + end + "\t(" + correct + ")";
     }
 }
