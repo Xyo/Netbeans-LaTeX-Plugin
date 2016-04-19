@@ -4,19 +4,16 @@ package Parser;
  *
  * @author Jeremy
  */
-import java.util.ArrayList; 
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.StringTokenizer;
 import java.io.*;
-import javax.swing.tree.DefaultMutableTreeNode;
+
 
 
 public class TexParser {
     private TexFile doc;
     private TexTree tree;
-    
+    private int lineCounter = 0;
+
     TexParser( TexFile doc ) throws FileNotFoundException {
         if( doc == null ) throw new FileNotFoundException( "TexFile not created yet" );
         this.doc = doc;
@@ -25,53 +22,52 @@ public class TexParser {
  
     // parses the tex file to build the tree structure
     public void beginParse() {
-        tree = new TexTree(doc.getFilePath());
-        
+
+
         try( BufferedReader br = 
-                new BufferedReader( new FileReader(doc.getFilePath()) ) ){
-            String line = br.readLine();
-            // TODO: parsing on value to just get identifier
-            // TODO: adding ending value
-            if( partFound(line) ){
-                tree.addNode(line);
-                // if the line begins a section and ends it immediately, then the next node
-                // will be the beginning of a new section
-                if( containsEndValue(line) ){
-                    
+                new BufferedReader(new FileReader(doc.getFilePath()))   ){
+
+            String documentClass = getDocClass(br);
+            tree = new TexTree(documentClass);
+
+            // todo: get ending line now, or set ending line when next section is added to tree?
+            // check if the line contains an important element
+            if( ParserUtilities.partFound(line) ){
+                String name = ParserUtilities.parseName(line);
+                Segment seg = new Segment( name, lineCounter);
+
+                if( ParserUtilities.isStartingElement(line) ){
+                    tree.addNewSection(seg);
+                }else if( ParserUtilities.isEndingElement(line) ){
+                    tree.addToChild(seg);
                 }
             }
         }catch( IOException e ){}  
     }
     
-    
-    public static boolean partFound( String value ){
-        String found = "";
-        if( value.equals("\\part") 
-                 || value.equals("\\chapter") 
-                 || value.equals("\\section") 
-                 || value.equals("\\subsection") 
-                 || value.equals("\\subsubsection") 
-                 || value.equals("\\paragraph") 
-                 || value.equals("\\subparagraph")  
-                 || value.equals("\\backmatter")
-                 || value.equals("\\frontmatter") 
-                 || value.equals("\\appendix") 
-                 || value.equals("\\backmatter")
-                 || value.equals("\\begin{)")    
-                 || value.equals("\\end{")       ){
-            
-            return true;
-        }
-        return false;    
+    public int getEndingLine( BufferedReader br ){
+
     }
-    
-    public static boolean containsEndValue( String line ){
-        // TODO: more cases of section ending
-        if( line.contains("}") ){
-            return true;
-        }else{
-            return false;
-        }
+
+
+    //get document class type to name tex tree
+    public String getDocClass(BufferedReader br) throws IOException {
+        String line = "";
+        do{
+            ++lineCounter;
+            br.readLine();
+        }while(!line.contains("\\documentclass{"));
+        // parse name between { }
+        return ParserUtilities.parseName(line);
+    }
+
+    // get end of preamble (and beginning of doc)
+    public void toBeginOfDoc( BufferedReader br ) throws IOException {
+        String line = "";
+        do{
+            ++lineCounter;
+            br.readLine();
+        }while(!line.contains("\\documentclass{"));
     }
     
 }
