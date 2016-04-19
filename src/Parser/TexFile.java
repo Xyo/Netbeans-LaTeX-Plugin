@@ -13,15 +13,7 @@ public class TexFile {
     TexFile( String filename ){
         this.filename = filename;
     }
-    
-    public boolean validLine(Integer number){
-        if( number < 1 || number > numLines ){
-            return false;
-        }else{
-            return true;
-        }
-    }
-    
+
     public boolean setNumLines( int num ){
         if( num < 1 ){
             return false;

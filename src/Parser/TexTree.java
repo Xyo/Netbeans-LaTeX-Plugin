@@ -18,28 +18,45 @@ public class TexTree {
     private JTree tree;
     
     private DefaultMutableTreeNode root;
-    private DefaultMutableTreeNode lastNode = null;
+    private DefaultMutableTreeNode lastNode;
     
     TexTree( String name ){
         root = new DefaultMutableTreeNode(name);
         model = new DefaultTreeModel(root);
         tree = new JTree(model);
+        // last node added at beginning will be root
+        lastNode = root;
     }
-    
-    /*  @line = data to add to node
-        @endSection:
-            true = next node will start a new section
-            false = next node will be added to lastNode
-    */
-    public void addNode( String line, boolean beginSection ){
+
+
+    public boolean addNewSection( Segment element ){
+
+            DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(element);
+            if( lastNode.getParent() == root ){
+
+            }else{
+
+            }
+            lastNode = lastNode.getParent();
+            lastNode.getParent().add(newNode);
+            lastNode = newNode;
+
+            lastNode = new DefaultMutableTreeNode(element);
+
+
+        System.out.println(lastNode.getPath());
+    }
+
+    public boolean addToChild( String element ){
         if( lastNode != null ){
-            DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(line);
+            DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(element);
             lastNode.add(newNode);
-            lastNode = newNode; 
-            return;
+            lastNode = newNode;
         }else{
-            lastNode = new DefaultMutableTreeNode(line);
+            lastNode = new DefaultMutableTreeNode(element);
         }
+        System.out.println(lastNode.getPath());
+        return true;
     }
-    
+
 }
