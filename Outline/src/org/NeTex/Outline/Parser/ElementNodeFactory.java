@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.NeTeX.Outline.Parse;
+package org.NeTex.Outline.Parser;
 
 
 /**
@@ -13,7 +13,7 @@ package org.NeTeX.Outline.Parse;
 public class ElementNodeFactory {
     
     public ElementNode createNode(String value, String name, int start, boolean needsEndTag){
-        ElementBean.ElementType type = ParserUtilities.getEnumValue(value);
+        ElementType type = ParserUtilities.getEnumValue(value);
         ElementBean element = new ElementBean(type, name, start, needsEndTag);
         return new ElementNode(element);
     }

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.NeTeX.Outline.Parse;
+package org.NeTex.Outline.Parser;
 
 import java.util.Objects;
 
@@ -12,10 +12,6 @@ import java.util.Objects;
  * @author Jeremy
  */
 public class ElementBean implements Comparable {
-    public enum ElementType{
-        PART, CHAPTER, SECTION, SUBSECTION, SUBSUBSECTION, PARAGRAPH, 
-        SUBPARAGRAPH, DESCRIPTION, FIGURE, LIST, TABLE
-    }
     
     private ElementType type;
     private final String name;

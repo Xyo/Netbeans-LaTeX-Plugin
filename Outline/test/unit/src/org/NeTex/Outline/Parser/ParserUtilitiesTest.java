@@ -1,9 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package org.NeTeX.Outline.Parse;
+package org.NeTex.Outline.Parser;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.rules.ExpectedException;
@@ -118,11 +113,11 @@ public class ParserUtilitiesTest {
     public void testGetEnumValue() {
         System.out.println("getEnumValue");
         String value = "part";
-        ElementBean.ElementType result = ParserUtilities.getEnumValue(value);
-        assertEquals(result, ElementBean.ElementType.PART);
+        ElementType result = ParserUtilities.getEnumValue(value);
+        assertEquals(result, ElementType.PART);
         
         String value2 = "butt";
-        ElementBean.ElementType result2 = ParserUtilities.getEnumValue(value2);
+        ElementType result2 = ParserUtilities.getEnumValue(value2);
         exception.expect(IllegalArgumentException.class);
     }
     public final ExpectedException exception = ExpectedException.none();

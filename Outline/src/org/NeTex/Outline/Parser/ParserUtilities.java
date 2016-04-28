@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.NeTeX.Parse;
+package org.NeTex.Outline.Parser;
 
 /**
  * Created by Jeremy on 4/18/16.
@@ -98,19 +98,24 @@ public class ParserUtilities {
         int index = line.indexOf("//");
         String newElem = line.substring(index+1);
         int nextIndex = line.indexOf("//");
-
-        
+        if( index != nextIndex ){
+            String[] parts = line.split("//");
+            return parts;
+        }
+        String[] part = {line.substring(index)};
+        return part;
+    
     }
 
-    public static ElementBean.ElementType getEnumValue(String value){
+    public static ElementType getEnumValue(String value){
         String type = value.toUpperCase();
         switch(type){
 //            case("PART"):
 //                return ElementBean.ElementType.PART;
             case("CHAPTER"):
-                return ElementBean.ElementType.CHAPTER;
+                return ElementType.CHAPTER;
             case("SECTION"):
-                return ElementBean.ElementType.SECTION;
+                return ElementType.SECTION;
             case("SUBSECTION"):
 //                return ElementBean.ElementType.SUBSECTION;
 //            case("SUBSUBSECTION"):

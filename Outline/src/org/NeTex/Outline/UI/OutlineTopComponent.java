@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.NeTeX.Window;
+package org.NeTex.Outline.UI;
 
 import javax.swing.ActionMap;
 import org.netbeans.api.settings.ConvertAsProperties;
@@ -49,7 +49,7 @@ public final class OutlineTopComponent extends TopComponent implements ExplorerM
         setToolTipText(Bundle.HINT_OutlineTopComponent());
         manager.setRootContext( new AbstractNode(Children.create(new ElementEventChildFactory(), true)) );
         ActionMap map = this.getActionMap();
-        associateLookup (ExplorerUtils.createLookup (manager, map));
+        //associateLookup (ExplorerUtils.createLookup (manager, map));
     }
 
     /**

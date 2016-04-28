@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.NeTeX.Parse;
+package org.NeTex.Outline.Parser;
 
 /**
  *
@@ -107,7 +107,8 @@ public class TexFileParser {
     // gets the most recently added incomplete node
     private ElementNode lastIncompleteNode(){
         for( int i = addedNodes.size()-1; i>=0;  i-- ){
-            if( !addedNodes.get(i).isComplete() ) return addedNodes.get(i);
+            if( !((ElementNode)addedNodes.get(i)).isComplete() ) 
+                return addedNodes.get(i);
         }
         return null;
     }
