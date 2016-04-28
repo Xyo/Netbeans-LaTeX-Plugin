@@ -18,6 +18,10 @@ public class TexFileParserTest {
     public TexFileParserTest() {
     }
     
+    public static void main(String[] args){
+        setUpClass();
+    }
+    
     @BeforeClass
     public static void setUpClass() {
         String file = "C:\\Users\\Jeremy\\Documents\\example.tex";
