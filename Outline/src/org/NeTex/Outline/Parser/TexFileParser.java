@@ -18,8 +18,7 @@ public class TexFileParser {
     private TexFile doc;
     private BufferedReader br;
     private int lineCounter = 0;
-    private ArrayList<ElementNode> addedNodes = new ArrayList<>();
-    private ElementNodeFactory nodeFactory = new ElementNodeFactory();
+    private ElementChildFactory elementFactory = new ElementChildFactory();
     
     Stack<ElementNode> stack = new Stack<>();
 
@@ -60,10 +59,10 @@ public class TexFileParser {
         return false;
     }
     
-    public ElementNode createNewNode(String line) throws IllegalArgumentException {
+    public ElementBean createNewBean(String line) throws IllegalArgumentException {
         String name = ParserUtilities.parseName(line);
         String type = ParserUtilities.parseType(line);
-        ElementNode newNode = nodeFactory.createNode(type, name, lineCounter, false);
+        ElementNode newNode = nodeFactory.create(type, name, lineCounter, false);
         if( newNode == null ) throw new IllegalArgumentException("Invalid paramaters here... " + type + name + lineCounter + "false" );
         return newNode;
     }
@@ -78,21 +77,10 @@ public class TexFileParser {
                 stack.pop();
             }
             // next node in the stack should be the parent element of the new node
-            currNode.add(newNode);
+            
         }
     }
     
-//    private boolean handleEmptyLine(String line){
-//        String name = "";
-//        String type = "";
-//        // check if node is not /begin{} type, and so is ended with a blank line
-//        // ((!ParserUtilities.beginFound(line))
-//        ElementNode lastNode = lastIncompleteNode();
-//        if( lastNode != null ){
-//            lastNode.setComplete(lineCounter);
-//        }
-//        return true;
-//    }
     
     private ElementNode lastNodeAdded(){
         return this.addedNodes.get( addedNodes.size()-1 );

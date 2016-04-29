@@ -5,16 +5,14 @@
  */
 package org.NeTex.Outline.Parser;
 
-
 /**
  *
  * @author Jeremy
  */
-public class ElementNodeFactory {
-    
-    public ElementNode createNode(String value, String name, int start, boolean needsEndTag){
+public class ElementBeanFactory {
+     public ElementBean createNode(String value, String name, int start, boolean needsEndTag){
         ElementType type = ParserUtilities.getEnumValue(value);
         ElementBean element = new ElementBean(type, name, start, needsEndTag);
-        return new ElementNode(element);
+        return element;
     }
 }

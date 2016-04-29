@@ -113,7 +113,7 @@ public class TexFileParserTest {
         BufferedReader br = null;
         TexFileParser instance = null;
         boolean expResult = false;
-        boolean result = instance.parseLine(br);
+        boolean result = instance.parseLine("//part{PartTitle}blahblah//section{SectionTitle}");
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");

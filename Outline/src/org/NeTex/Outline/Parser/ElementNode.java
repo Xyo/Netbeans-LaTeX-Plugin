@@ -5,16 +5,20 @@
  */
 package org.NeTex.Outline.Parser;
 import javax.swing.tree.DefaultMutableTreeNode;
+import org.openide.nodes.AbstractNode;
+import org.openide.nodes.Children;
+import org.openide.util.lookup.Lookups;
 /**
  *
  * @author Jeremy
  */
-public class ElementNode extends DefaultMutableTreeNode {
-    private ElementBean element;
-    
-    ElementNode(ElementBean bean){
-        this.element = bean;
+public class ElementNode extends AbstractNode {
+    private ElementBean element = null; //TODO: fix this later
+
+    public ElementNode(Children children) {
+        super(children);
     }
+    
     
     public String getName(){
         return this.element.getName();

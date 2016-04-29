@@ -47,6 +47,7 @@ public final class OutlineTopComponent extends TopComponent implements ExplorerM
         initComponents();
         setName(Bundle.CTL_OutlineTopComponent());
         setToolTipText(Bundle.HINT_OutlineTopComponent());
+        associateLookup(ExplorerUtils.createLookup(manager, getActionMap()));
         manager.setRootContext( new AbstractNode(Children.create(new ElementEventChildFactory(), true)) );
         ActionMap map = this.getActionMap();
         //associateLookup (ExplorerUtils.createLookup (manager, map));
