@@ -24,14 +24,6 @@ public class TexFileParserTest {
     
     @BeforeClass
     public static void setUpClass() {
-        String file = "C:\\Users\\Jeremy\\Documents\\example.tex";
-        TexFile doc = new TexFile(file);
-        try{
-            TexFileParser parser = new TexFileParser(doc);
-            parser.beginParse();
-        }catch( FileNotFoundException e ){
-            e.printStackTrace();
-        }
        
     }   
     
@@ -57,12 +49,19 @@ public class TexFileParserTest {
         String name = "";
         int start = 0;
         boolean complete = false;
+        
         TexFileParser instance = null;
+        try{
+            instance = new TexFileParser( new TexFile("C:\\\\Users\\\\Jeremy\\\\Documents\\\\example.tex") );
+        }catch(FileNotFoundException ex){
+            ex.printStackTrace();
+        }
+        String nonsense = "//part{PartTitle}blahblah//section{SectionTitle}";
         ElementNode expResult = null;
-        ElementNode result = instance.addNewNode(type, name, start, complete);
-        assertEquals(expResult, result);
+        ElementNode result = instance.createNewNode("//chapter{ChapterTitle}");
+        System.out.println(result.toString());
+        assertNotEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**

@@ -44,6 +44,14 @@ public class ElementNode extends DefaultMutableTreeNode {
     public void setEndLine(int end){
         element.setEnd(end);
     }
+    
+    public ElementType getType(){
+        return element.getType();
+    }
+    
+    public int getLevel(){
+        return ElementType.getLevel(getType());
+    }
 }
 
 

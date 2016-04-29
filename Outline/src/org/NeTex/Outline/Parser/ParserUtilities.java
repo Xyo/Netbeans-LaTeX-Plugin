@@ -96,8 +96,8 @@ public class ParserUtilities {
     
     public static String[] parseElementsFromLine(String line){
         int index = line.indexOf("//");
-        String newElem = line.substring(index+1);
         int nextIndex = line.indexOf("//");
+
         if( index != nextIndex ){
             String[] parts = line.split("//");
             return parts;
@@ -110,8 +110,8 @@ public class ParserUtilities {
     public static ElementType getEnumValue(String value){
         String type = value.toUpperCase();
         switch(type){
-//            case("PART"):
-//                return ElementBean.ElementType.PART;
+            case("PART"):
+                return ElementType.PART;
             case("CHAPTER"):
                 return ElementType.CHAPTER;
             case("SECTION"):
