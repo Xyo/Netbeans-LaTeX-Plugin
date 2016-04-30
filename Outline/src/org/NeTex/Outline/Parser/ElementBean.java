@@ -21,7 +21,7 @@ public class ElementBean implements Comparable {
     private boolean requiresEnding = false;
     
     
-    ElementBean(ElementType type, String name, int start, boolean needsEndTag ) {
+    public ElementBean(ElementType type, String name, int start, boolean needsEndTag ) {
         this.type = type;
         this.name = name;
         this.start = (Integer)start;
@@ -38,7 +38,7 @@ public class ElementBean implements Comparable {
     
     @Override
     public boolean equals(Object seg) {
-        if( seg == null || !(seg instanceof ElementNode) ) return false;
+        if( seg == null || !(seg instanceof ElementBean) ) return false;
         
         return this.start == ((ElementBean)seg).getStart();
     }
@@ -94,6 +94,10 @@ public class ElementBean implements Comparable {
     
     public String getName(){
         return name;
+    }
+    
+    public int getLevel(){
+        return ElementType.getLevel(getType());
     }
     
     @Override

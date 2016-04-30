@@ -3,16 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.NeTex.Outline.Parser;
+package org.NeTex.Outline.UI;
 
 import java.util.Arrays;
 import java.util.List;
+import org.NeTex.Outline.Parser.ElementBean;
+import org.NeTex.Outline.Parser.ElementType;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.ChildFactory;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 import org.openide.util.lookup.Lookups;
-
+import org.NeTex.Outline.Parser.ElementBean;
 
 /**
  *

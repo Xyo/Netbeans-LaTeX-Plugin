@@ -16,6 +16,7 @@ import org.openide.nodes.Children;
 import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
 
+
 /**
  * Top component which displays something.
  */
@@ -49,8 +50,6 @@ public final class OutlineTopComponent extends TopComponent implements ExplorerM
         setToolTipText(Bundle.HINT_OutlineTopComponent());
         associateLookup(ExplorerUtils.createLookup(manager, getActionMap()));
         manager.setRootContext( new AbstractNode(Children.create(new ElementEventChildFactory(), true)) );
-        ActionMap map = this.getActionMap();
-        //associateLookup (ExplorerUtils.createLookup (manager, map));
     }
 
     /**
@@ -84,7 +83,7 @@ public final class OutlineTopComponent extends TopComponent implements ExplorerM
     public void componentClosed() {
         // TODO add custom code on component closing
     }
-
+    
     void writeProperties(java.util.Properties p) {
         // better to version settings since initial version as advocated at
         // http://wiki.apidesign.org/wiki/PropertyFiles
@@ -97,14 +96,18 @@ public final class OutlineTopComponent extends TopComponent implements ExplorerM
         // TODO read your settings according to their version
     }
     
+    @Override
     public ExplorerManager getExplorerManager(){
         return this.manager;
     }
     
+    @Override
     // switch all listeners on when component is shown
     protected void componentActivated() {
         ExplorerUtils.activateActions(manager, true);
     }
+    
+    @Override
     // switch all listeners off when component is hidden
     protected void componentDeactivated() {
         ExplorerUtils.activateActions(manager, false);

@@ -116,7 +116,7 @@ public class ParserUtilities {
                 return ElementType.CHAPTER;
             case("SECTION"):
                 return ElementType.SECTION;
-            case("SUBSECTION"):
+//            case("SUBSECTION"):
 //                return ElementBean.ElementType.SUBSECTION;
 //            case("SUBSUBSECTION"):
 //                return ElementBean.ElementType.SUBSUBSECTION;

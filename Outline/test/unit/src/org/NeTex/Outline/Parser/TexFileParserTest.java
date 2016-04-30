@@ -43,7 +43,7 @@ public class TexFileParserTest {
      * Test of addNewNode method, of class TexFileParser.
      */
     @Test
-    public void testAddNewNode() {
+    public void testAddNewBean() {
         System.out.println("addNewNode");
         String type = "";
         String name = "";
@@ -57,8 +57,8 @@ public class TexFileParserTest {
             ex.printStackTrace();
         }
         String nonsense = "//part{PartTitle}blahblah//section{SectionTitle}";
-        ElementNode expResult = null;
-        ElementNode result = instance.createNewNode("//chapter{ChapterTitle}");
+        ElementBean expResult = null;
+        ElementBean result = instance.createNewBean("//chapter{ChapterTitle}");
         System.out.println(result.toString());
         assertNotEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
@@ -76,33 +76,33 @@ public class TexFileParserTest {
         fail("The test case is a prototype.");
     }
 
-    /**
-     * Test of getDocClass method, of class TexFileParser.
-     */
-    @Test
-    public void testGetDocClass() throws Exception {
-        System.out.println("getDocClass");
-        BufferedReader br = null;
-        TexFileParser instance = null;
-        String expResult = "";
-        String result = instance.getDocClass(br);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of toBeginOfDoc method, of class TexFileParser.
-     */
-    @Test
-    public void testToBeginOfDoc() throws Exception {
-        System.out.println("toBeginOfDoc");
-        BufferedReader br = null;
-        TexFileParser instance = null;
-        instance.toBeginOfDoc(br);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
+//    /**
+//     * Test of getDocClass method, of class TexFileParser.
+//     */
+//    @Test
+//    public void testGetDocClass() throws Exception {
+//        System.out.println("getDocClass");
+//        BufferedReader br = null;
+//        TexFileParser instance = null;
+//        String expResult = "";
+//        String result = instance.getDocClass(br);
+//        assertEquals(expResult, result);
+//        // TODO review the generated test code and remove the default call to fail.
+//        fail("The test case is a prototype.");
+//    }
+//
+//    /**
+//     * Test of toBeginOfDoc method, of class TexFileParser.
+//     */
+//    @Test
+//    public void testToBeginOfDoc() throws Exception {
+//        System.out.println("toBeginOfDoc");
+//        BufferedReader br = null;
+//        TexFileParser instance = null;
+//        instance.toBeginOfDoc(br);
+//        // TODO review the generated test code and remove the default call to fail.
+//        fail("The test case is a prototype.");
+//    }
 
     /**
      * Test of parseLine method, of class TexFileParser.
