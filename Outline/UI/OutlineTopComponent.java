@@ -5,32 +5,37 @@
  */
 package org.NeTex.Outline.UI;
 
+import org.netbeans.api.settings.ConvertAsProperties;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
+import org.openide.windows.TopComponent;
+import org.openide.util.NbBundle.Messages;
 import javax.swing.ActionMap;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.ExplorerUtils;
+import org.openide.explorer.view.BeanTreeView;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
 
-
 /**
  * Top component which displays something.
  */
 @ConvertAsProperties(
-        dtd = "-//org.NeTeX.Outline//Outline//EN",
+        dtd = "-//org.NeTex.Outline.UI//Outline//EN",
         autostore = false
 )
 @TopComponent.Description(
         preferredID = "OutlineTopComponent",
-        iconBase = "org/NeTeX/Outline/outlineIcon.png",
+        //iconBase="SET/PATH/TO/ICON/HERE", 
         persistenceType = TopComponent.PERSISTENCE_ALWAYS
 )
-@TopComponent.Registration(mode = "leftSlidingSide", openAtStartup = true)
-@ActionID(category = "Window", id = "org.NeTeX.Outline.OutlineTopComponent")
+@TopComponent.Registration(mode = "explorer", openAtStartup = true)
+@ActionID(category = "Window", id = "org.NeTex.Outline.UI.OutlineTopComponent")
 @ActionReference(path = "Menu/Window" /*, position = 333 */)
 @TopComponent.OpenActionRegistration(
         displayName = "#CTL_OutlineAction",
@@ -42,6 +47,7 @@ import org.openide.util.NbBundle.Messages;
     "HINT_OutlineTopComponent=This is a Outline window"
 })
 public final class OutlineTopComponent extends TopComponent implements ExplorerManager.Provider {
+    
     private final ExplorerManager manager = new ExplorerManager();
     
     public OutlineTopComponent() {
@@ -49,7 +55,11 @@ public final class OutlineTopComponent extends TopComponent implements ExplorerM
         setName(Bundle.CTL_OutlineTopComponent());
         setToolTipText(Bundle.HINT_OutlineTopComponent());
         associateLookup(ExplorerUtils.createLookup(manager, getActionMap()));
-        manager.setRootContext( new AbstractNode(Children.create(new ElementEventChildFactory(), true)) );
+        // create and set root
+        manager.setRootContext( new ElementNode());
+        // TODO: change to display name of document parsed
+        manager.getRootContext().setDisplayName("Latex Document"); 
+        
     }
 
     /**
@@ -60,19 +70,14 @@ public final class OutlineTopComponent extends TopComponent implements ExplorerM
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
+        jScrollPane1 = new BeanTreeView();
+
+        setLayout(new java.awt.BorderLayout());
+        add(jScrollPane1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
     @Override
     public void componentOpened() {
@@ -83,7 +88,7 @@ public final class OutlineTopComponent extends TopComponent implements ExplorerM
     public void componentClosed() {
         // TODO add custom code on component closing
     }
-    
+
     void writeProperties(java.util.Properties p) {
         // better to version settings since initial version as advocated at
         // http://wiki.apidesign.org/wiki/PropertyFiles
@@ -96,10 +101,13 @@ public final class OutlineTopComponent extends TopComponent implements ExplorerM
         // TODO read your settings according to their version
     }
     
-    @Override
-    public ExplorerManager getExplorerManager(){
-        return this.manager;
+     @Override
+    public ExplorerManager getExplorerManager() {
+        return manager;
     }
+    
+    
+    /*
     
     @Override
     // switch all listeners on when component is shown
@@ -112,4 +120,9 @@ public final class OutlineTopComponent extends TopComponent implements ExplorerM
     protected void componentDeactivated() {
         ExplorerUtils.activateActions(manager, false);
     }
+    
+ 
+    */
+
+  
 }

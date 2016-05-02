@@ -20,23 +20,28 @@ import org.NeTex.Outline.Parser.ElementBean;
  *
  * @author Jeremy
  */
-public class ElementChildFactory extends ChildFactory<ElementBean>{
-
+public class ElementNodeChildFactory extends ChildFactory<ElementBean>{
+    ElementBean element;
+    
+    ElementNodeChildFactory(ElementBean element){
+        this.element = element;
+    }
+    
     @Override
     protected boolean createKeys(List<ElementBean> list) {
-        ElementBean[] beans = new ElementBean[2];
-        for( int i=0; i<beans.length; i++){
-            beans[0] = new ElementBean(ElementType.CHAPTER, "ChapterTitle", 5, false );
-            list.addAll(Arrays.asList(beans));
+        List<ElementBean> children = element.getChildren();
+        if( children == null ){
+            return false;
+        }else{
+            list.addAll(children);
+            return true;
         }
-        return true;
     }
     
     @Override
     protected Node createNodeForKey(ElementBean key){
-        Node newNode = new AbstractNode(Children.create(new ElementChildFactory(), true), Lookups.singleton(key));
-        newNode.setDisplayName(key.getName());
-        return newNode;
+        return new ElementNode(key);
     }
+    
     
 }

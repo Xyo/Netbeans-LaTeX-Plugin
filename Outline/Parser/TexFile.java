@@ -13,8 +13,8 @@ package org.NeTex.Outline.Parser;
  * Represents some basic info about the document
  */
 public class TexFile {
-    private int numLines;
-    private String filename;
+    private int numOfLines;
+    private final String filename;
     
     TexFile(String filename ){
         this.filename = filename;
@@ -24,7 +24,7 @@ public class TexFile {
         if( num < 1 ){
             return false;
         }else{
-            this.numLines = num;
+            this.numOfLines = num;
             return true;
         }
     }
@@ -34,7 +34,7 @@ public class TexFile {
     }
     
     public int numOfLines(){
-        return numLines;
+        return numOfLines;
     }
 }
 

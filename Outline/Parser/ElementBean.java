@@ -1,25 +1,25 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.NeTex.Outline.Parser;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import org.openide.nodes.AbstractNode;
+import org.openide.nodes.Children;
+import org.openide.nodes.Node;
 
 /**
  *
  * @author Jeremy
  */
-public class ElementBean implements Comparable {
+public class ElementBean {
     
     private ElementType type;
-    private final String name;
+    private final String name;  
     private final Integer start;
     private Integer end;
     private boolean needsEndTag = false;
     private boolean requiresEnding = false;
-    
+    private List<ElementBean> children = new ArrayList<>();
     
     public ElementBean(ElementType type, String name, int start, boolean needsEndTag ) {
         this.type = type;
@@ -28,22 +28,13 @@ public class ElementBean implements Comparable {
         this.needsEndTag = needsEndTag;
     }
     
-    
-    
-    @Override
-    public int compareTo(Object other) {
-        if( !(other instanceof ElementBean) ) return 0;
-        return this.start.compareTo( ((ElementBean)other).getStart() );
-    }
-    
-    @Override
-    public boolean equals(Object seg) {
-        if( seg == null || !(seg instanceof ElementBean) ) return false;
-        
-        return this.start == ((ElementBean)seg).getStart();
+    public void addChild(ElementBean child){
+        children.add(child);
     }
 
-  
+    public List<ElementBean> getChildren(){
+        return children;
+    }
 
     @Override
     public String toString(){
@@ -51,7 +42,6 @@ public class ElementBean implements Comparable {
     }
 
 
-    
     // Getters and Setters
     public boolean isNeedsEndTag() {
         return needsEndTag;
@@ -74,11 +64,11 @@ public class ElementBean implements Comparable {
     public int getStart() {
         return start;
     }
-
-
-    public Integer getEnd() {
+    
+    public int getEnd(){
         return end;
     }
+
 
     public void setEnd(int end) {
         this.end = end;
@@ -100,17 +90,5 @@ public class ElementBean implements Comparable {
         return ElementType.getLevel(getType());
     }
     
-    @Override
-    public int hashCode() {
-        int hash = 3;
-        hash = 41 * hash + Objects.hashCode(this.type);
-        hash = 41 * hash + Objects.hashCode(this.name);
-        hash = 41 * hash + Objects.hashCode(this.start);
-        hash = 41 * hash + Objects.hashCode(this.end);
-        hash = 41 * hash + (this.needsEndTag ? 1 : 0);
-        hash = 41 * hash + (this.requiresEnding ? 1 : 0);
-        return hash;
-    }
 }
-
 

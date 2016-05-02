@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.NeTex.Outline.Parser;
 
 /**
@@ -10,7 +5,7 @@ package org.NeTex.Outline.Parser;
  * @author Jeremy
  */
 
-import org.NeTex.Outline.UI.ElementChildFactory;
+import org.NeTex.Outline.UI.ElementNodeChildFactory;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Stack;
@@ -20,8 +15,6 @@ public class TexFileParser {
     private BufferedReader br;
     private int lineCounter = 0;
     private ArrayList<ElementBean> addedBeans = new ArrayList<>();
-    private ElementChildFactory elementFactory = new ElementChildFactory();
-    private ElementBeanFactory beanFactory = new ElementBeanFactory();
     
     Stack<ElementBean> stack = new Stack<>();
     
@@ -49,60 +42,63 @@ public class TexFileParser {
                 line = br.readLine();
             }
             parseLine(line);
-        }catch( IOException e ){}  
+        }catch( IOException e ){
+            e.printStackTrace();
+        }  
     }
     
+
     // Gets the next non-empty line in the document
     public boolean parseLine(String line) throws IOException {
         
-        ElementBean newBean = null;
+        ElementBean element = null;
         // if an element type has been found, create new node and/or finish old node
         String[] elements = ParserUtilities.parseElementsFromLine(line);
         for( String elem : elements ){
-            newBean = createNewBean(line);
-            addBeanToStack(newBean);
+            element = createElement(line);
+            addElementToStack(element);
         }
        
         return false;
     }
     
-    public ElementBean createNewBean(String line) throws IllegalArgumentException {
+    
+    public ElementBean createElement(String line) throws IllegalArgumentException {
         String name = ParserUtilities.parseName(line);
-        String type = ParserUtilities.parseType(line);
-        ElementBean newBean = beanFactory.createBean(name, name, lineCounter, true);
-        if( newBean == null ) throw new IllegalArgumentException("Invalid paramaters here... " + type + name + lineCounter + "false" );
-        return newBean;
+        String value = ParserUtilities.parseType(line);
+        ElementType type = ParserUtilities.getEnumValue(value);
+        
+        ElementBean elem = new ElementBean(type, name, lineCounter, true);
+        
+        if( elem == null ){
+            throw new IllegalArgumentException("Invalid paramaters here... " + type + name + lineCounter + "false" );
+        }
+        return elem;
     }
     
-    public void addBeanToStack(ElementBean newBean){
-         if(!stack.isEmpty()){
+    // pop elements from the stack until an element with higher level is found
+    public void addElementToStack(ElementBean element){
+        if(!stack.isEmpty()){
             ElementBean currNode = stack.peek();
             // remove previous nodes that are higher level than the new node being added
-            while( currNode.getLevel() >= newBean.getLevel() ){
-                stack.peek();
+            while( currNode.getLevel() <= element.getLevel() ){
+                currNode = stack.peek();
                 currNode.setComplete(this.lineCounter);
                 stack.pop();
             }
-            // next node in the stack should be the parent element of the new node
-            
+            // remaining node at top of stack should be the parent element
+            currNode.addChild(element);
+            stack.push(element);
         }
     }
     
-    
-    
-    private ElementBean addedBeanByName(String name){
-        for( ElementBean bean : this.addedBeans ){
-            if( bean.getName().equals(name) ) return bean;
-        }
-        return null;
-    }
     
      //get document class type to name tex tree
     public String getDocClass(BufferedReader br) throws IOException {
         String line = "";
         do{
             ++lineCounter;
-            br.readLine();
+            line = br.readLine();
         }while(!line.contains("\\documentclass{"));
         // parse name between { }
         return ParserUtilities.parseName(line);
