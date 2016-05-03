@@ -92,14 +92,20 @@ public class ParserUtilities {
     public static String[] parseElementsFromLine(String line){
         int index = line.indexOf("//");
         int nextIndex = line.indexOf("//");
-
+        
+        if( index < 0 ) return null;
+        
+        if( nextIndex == -1 ){
+            String[] part = {line.substring(index)};
+            return part;
+        }
+        
         if( index != nextIndex ){
             String[] parts = line.split("//");
             return parts;
+        }else{
+            return null;
         }
-        String[] part = {line.substring(index)};
-        return part;
-    
     }
 
     public static ElementType getEnumValue(String value){

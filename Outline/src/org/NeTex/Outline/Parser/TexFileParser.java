@@ -5,46 +5,49 @@ package org.NeTex.Outline.Parser;
  * @author Jeremy
  */
 
-import org.NeTex.Outline.UI.ElementNodeChildFactory;
+import org.NeTex.Outline.Window.ElementNodeChildFactory;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Stack;
+import org.NeTex.Outline.Window.ElementNode;
 
 public class TexFileParser {
     private TexFile doc;
     private BufferedReader br;
     private int lineCounter = 0;
+    private ElementNode root;
     private ArrayList<ElementBean> addedBeans = new ArrayList<>();
     
     Stack<ElementBean> stack = new Stack<>();
     
-    public static void main(String[] args){
-        
-    }
     
-    
-    TexFileParser( TexFile doc ) throws FileNotFoundException {
+    public TexFileParser( TexFile doc, ElementNode rootNode ) throws FileNotFoundException {
         if( doc == null ) throw new FileNotFoundException( "The file is missing" );
         this.doc = doc;
+        this.root = rootNode;
     }
     
     
- 
     // parses the tex file to build the tree structure
     public void beginParse() {
         
         try( BufferedReader br = 
-                new BufferedReader(new FileReader(doc.getFilePath()))   ){
+                new BufferedReader(new FileReader("C:\\Users\\Jeremy\\Desktop\\NeTex\\groupCombine\\groupCombine\\Outline\\example.tex")   )){
 
-            String line = "";
-            while( (line = br.readLine()).isEmpty() || !ParserUtilities.partFound(line) ){
-                lineCounter++;
+            String line = br.readLine();
+            // keep reading until end of file
+            while( line != null ){
+                ++lineCounter;
+                if( ParserUtilities.partFound(line) ){
+                    parseLine(line);
+                }
                 line = br.readLine();
             }
-            parseLine(line);
         }catch( IOException e ){
             e.printStackTrace();
-        }  
+        }catch(StringIndexOutOfBoundsException s){
+            s.printStackTrace();
+        }
     }
     
 
@@ -54,12 +57,13 @@ public class TexFileParser {
         ElementBean element = null;
         // if an element type has been found, create new node and/or finish old node
         String[] elements = ParserUtilities.parseElementsFromLine(line);
+        if( elements == null ) return false;
+        
         for( String elem : elements ){
-            element = createElement(line);
+            element = createElement(elem);
             addElementToStack(element);
         }
-       
-        return false;
+        return true;
     }
     
     

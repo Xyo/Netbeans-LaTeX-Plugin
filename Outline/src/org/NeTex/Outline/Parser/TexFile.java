@@ -16,7 +16,7 @@ public class TexFile {
     private int numOfLines;
     private final String filename;
     
-    TexFile(String filename ){
+    public TexFile(String filename ){
         this.filename = filename;
     }
 

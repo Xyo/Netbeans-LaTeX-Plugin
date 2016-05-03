@@ -3,17 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.NeTex.Outline.UI;
+package org.NeTex.Outline.Window;
 
-import java.util.Arrays;
 import java.util.List;
-import org.NeTex.Outline.Parser.ElementBean;
-import org.NeTex.Outline.Parser.ElementType;
-import org.openide.nodes.AbstractNode;
 import org.openide.nodes.ChildFactory;
-import org.openide.nodes.Children;
 import org.openide.nodes.Node;
-import org.openide.util.lookup.Lookups;
 import org.NeTex.Outline.Parser.ElementBean;
 
 /**
@@ -27,15 +21,22 @@ public class ElementNodeChildFactory extends ChildFactory<ElementBean>{
         this.element = element;
     }
     
+    ElementNodeChildFactory(){}
+    
     @Override
     protected boolean createKeys(List<ElementBean> list) {
-        List<ElementBean> children = element.getChildren();
-        if( children == null ){
-            return false;
-        }else{
-            list.addAll(children);
-            return true;
+        try{
+            List<ElementBean> children = element.getChildren();
+            if( children == null ){
+                return false;
+            }else{
+                list.addAll(children);
+                return true;
+            }
+        }catch( NullPointerException e ){
+            
         }
+        return false;
     }
     
     @Override

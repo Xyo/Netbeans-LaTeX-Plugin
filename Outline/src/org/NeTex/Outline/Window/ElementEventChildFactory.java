@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.NeTex.Outline.UI;
+package org.NeTex.Outline.Window;
 
 import java.awt.Event;
 import java.util.List;
