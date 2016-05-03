@@ -61,7 +61,7 @@ public final class NavigationWindowTopComponent extends TopComponent implements 
     //private static final RequestProcessor threadRequest = new RequestProcessor(NavigationWindowTopComponent.class);
     //private volatile RequestProcessor.Task last;
     private final ExplorerManager manager = new ExplorerManager();
-    private final ElementNode root = new ElementNode();
+    private ElementNode root = new ElementNode();
     
     public NavigationWindowTopComponent() {
         initComponents();
@@ -70,7 +70,6 @@ public final class NavigationWindowTopComponent extends TopComponent implements 
         manager.setRootContext(root);
 
         setDisplayName("Example");
-        
     }
 
     /**
@@ -112,8 +111,10 @@ public final class NavigationWindowTopComponent extends TopComponent implements 
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try{
-           TexFileParser parser = new TexFileParser(new TexFile("example.tex"), this.root);
-           parser.beginParse();
+            TexFileParser parser = new TexFileParser(new TexFile("example.tex"));
+            ElementNode newRoot = parser.beginParse();
+            if( newRoot != null ) this.root = newRoot;
+            this.repaint();
        }catch(IOException e){
            // can't do much
        }

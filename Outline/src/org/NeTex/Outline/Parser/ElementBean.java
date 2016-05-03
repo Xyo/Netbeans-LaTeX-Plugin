@@ -28,6 +28,13 @@ public class ElementBean {
         this.needsEndTag = needsEndTag;
     }
     
+    public ElementBean(){
+        this.type = ElementType.ROOT;
+        this.name = "Document Root";
+        this.start = 0;
+        this.needsEndTag = false;
+    }
+    
     public void addChild(ElementBean child){
         children.add(child);
     }

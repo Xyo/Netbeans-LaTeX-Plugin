@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.NeTex.Outline.Parser.ElementBean;
+import org.NeTex.Outline.Parser.ElementType;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.util.*;
@@ -13,18 +14,24 @@ import org.openide.util.*;
  * @author Jeremy
  */
 public class ElementNode extends AbstractNode {
-    
+    private ElementType type;
     private ElementBean element;
     
     public ElementNode(ElementBean element){
        super(Children.create(new ElementNodeChildFactory(element), true ));
        setDisplayName(element.getName());
+       this.type = element.getType();
     }
     
 
     public ElementNode(){
         super(Children.create(new ElementNodeChildFactory(), true));
         setDisplayName("Root");
+        this.type = ElementType.ROOT;
+    }
+    
+    public int getLineNumber(){
+        return element.getStart();
     }
  
 //    @Override

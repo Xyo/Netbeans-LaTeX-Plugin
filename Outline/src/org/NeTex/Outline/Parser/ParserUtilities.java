@@ -71,6 +71,9 @@ public class ParserUtilities {
         
         int start = line.indexOf("{") + 1;
         int end = line.indexOf("}");
+        if( start < 0 || end < 0 ) return "";
+        
+        if( (start+1) == end ) return parseType(line);
         return line.substring( start, end );
     }
     
@@ -90,21 +93,17 @@ public class ParserUtilities {
     }
     
     public static String[] parseElementsFromLine(String line){
-        int index = line.indexOf("//");
-        int nextIndex = line.indexOf("//");
+        int index = line.indexOf("\\");
+        int nextIndex = line.lastIndexOf("\\");
         
         if( index < 0 ) return null;
         
-        if( nextIndex == -1 ){
-            String[] part = {line.substring(index)};
-            return part;
-        }
-        
         if( index != nextIndex ){
-            String[] parts = line.split("//");
+            String[] parts = line.split("\\\\");
             return parts;
         }else{
-            return null;
+            String[] part = {line.substring(index)};
+            return part;
         }
     }
 
@@ -131,7 +130,11 @@ public class ParserUtilities {
 //                return ElementBean.ElementType.LIST;
 //            case("TABLE"):
 //                return ElementBean.ElementType.TABLE;
+                
+                // TODO: fix illegal arguments
+            default:
+                return ElementType.TABLE;
         }
-        throw new IllegalArgumentException(value + " is not a supported type");
+        //throw new IllegalArgumentException(value + " is not a supported type");
     }
 }

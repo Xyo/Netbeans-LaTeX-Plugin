@@ -41,7 +41,9 @@ public class ElementNodeChildFactory extends ChildFactory<ElementBean>{
     
     @Override
     protected Node createNodeForKey(ElementBean key){
-        return new ElementNode(key);
+        ElementNode newNode = new ElementNode(key);
+        newNode.setDisplayName(key.getName());
+        return newNode;
     }
     
     

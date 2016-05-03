@@ -15,24 +15,25 @@ public class TexFileParser {
     private TexFile doc;
     private BufferedReader br;
     private int lineCounter = 0;
-    private ElementNode root;
+    private ElementBean rootBean;
     private ArrayList<ElementBean> addedBeans = new ArrayList<>();
     
     Stack<ElementBean> stack = new Stack<>();
     
     
-    public TexFileParser( TexFile doc, ElementNode rootNode ) throws FileNotFoundException {
+    public TexFileParser( TexFile doc ) throws FileNotFoundException {
         if( doc == null ) throw new FileNotFoundException( "The file is missing" );
         this.doc = doc;
-        this.root = rootNode;
+        // push root bean to stack
+        rootBean = new ElementBean();
+        stack.push(rootBean);
     }
     
-    
     // parses the tex file to build the tree structure
-    public void beginParse() {
+    public ElementNode beginParse() {
         
         try( BufferedReader br = 
-                new BufferedReader(new FileReader("C:\\Users\\Jeremy\\Desktop\\NeTex\\groupCombine\\groupCombine\\Outline\\example.tex")   )){
+                new BufferedReader(new FileReader("C:\\Users\\Jeremy\\Documents\\NetBeansProjects\\NeTex\\sample.tex")   )){
 
             String line = br.readLine();
             // keep reading until end of file
@@ -43,11 +44,14 @@ public class TexFileParser {
                 }
                 line = br.readLine();
             }
+           ElementNode newRoot = new ElementNode(this.rootBean);
+           return newRoot;
         }catch( IOException e ){
             e.printStackTrace();
         }catch(StringIndexOutOfBoundsException s){
             s.printStackTrace();
         }
+        return new ElementNode(new ElementBean(ElementType.ROOT, "New root", 0, false));
     }
     
 
@@ -70,7 +74,13 @@ public class TexFileParser {
     public ElementBean createElement(String line) throws IllegalArgumentException {
         String name = ParserUtilities.parseName(line);
         String value = ParserUtilities.parseType(line);
-        ElementType type = ParserUtilities.getEnumValue(value);
+        ElementType type;
+        try{
+            type = ParserUtilities.getEnumValue(value);
+        }catch( IllegalArgumentException e ){
+            e.printStackTrace();
+            type = ElementType.DESCRIPTION;
+        }
         
         ElementBean elem = new ElementBean(type, name, lineCounter, true);
         
@@ -84,15 +94,16 @@ public class TexFileParser {
     public void addElementToStack(ElementBean element){
         if(!stack.isEmpty()){
             ElementBean currNode = stack.peek();
-            // remove previous nodes that are higher level than the new node being added
-            while( currNode.getLevel() <= element.getLevel() ){
-                currNode = stack.peek();
-                currNode.setComplete(this.lineCounter);
-                stack.pop();
-            }
-            // remaining node at top of stack should be the parent element
             currNode.addChild(element);
             stack.push(element);
+            // remove previous nodes that are higher level than the new node being added
+//            while( currNode.getLevel() >= element.getLevel() ){
+//                currNode = stack.peek();
+//                if( currNode.getType() != ElementType.ROOT ) currNode.setComplete(this.lineCounter);
+//                stack.pop();
+//            }
+            // remaining node at top of stack should be the parent element
+            
         }
     }
     

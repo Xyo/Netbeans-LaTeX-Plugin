@@ -53,7 +53,7 @@ public class TexFileParserTest {
         
         TexFileParser instance = null;
         try{
-            instance = new TexFileParser( new TexFile("C:\\\\Users\\\\Jeremy\\\\Documents\\\\example.tex"), new ElementNode() );
+            instance = new TexFileParser( new TexFile("C:\\\\Users\\\\Jeremy\\\\Documents\\\\example.tex"));
         }catch(FileNotFoundException ex){
             ex.printStackTrace();
         }
