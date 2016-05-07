@@ -29,15 +29,15 @@ public class ElementNodeChildFactory extends ChildFactory<ElementBean>{
         try{
             List<ElementBean> children = element.getChildren();
             if( children == null || children.isEmpty() ){
-                return false;
+                return true;
             }else{
                 list.addAll(children);
                 return true;
             }
         }catch( NullPointerException e ){
-            e.printStackTrace();
+            
         }
-        return false;
+        return true;
     }
     
     @Override

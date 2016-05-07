@@ -39,7 +39,7 @@ public class TexFileParser {
 
             String line = br.readLine();
             // keep reading until end of file
-            while(!line.equals("\\end{document}")){
+            while(!line.equals("\\end{document}") ){
                 ++lineCounter;
                 if( ParserUtilities.partFound(line) ){
                     parseLine(line);
@@ -48,16 +48,17 @@ public class TexFileParser {
             }           
         }catch( IOException e ){
             e.printStackTrace();
-        }catch(StringIndexOutOfBoundsException s){
-            s.printStackTrace();
+            return new ElementNode(this.rootBean);
+            
         }catch(NullPointerException n){
             n.printStackTrace();
+            return new ElementNode(this.rootBean);
         }
         return new ElementNode(this.rootBean);
     }
 
     // Gets the next non-empty line in the document
-    public boolean parseLine(String line) throws IOException {
+    public boolean parseLine(String line) throws IOException, NullPointerException {
         
         ElementBean element = null;
         // if an element type has been found, create new node and/or finish old node
@@ -72,7 +73,7 @@ public class TexFileParser {
     }
     
     
-    public ElementBean createElement(String line) throws IllegalArgumentException {
+    public ElementBean createElement(String line) throws IllegalArgumentException, NullPointerException {
         String name = ParserUtilities.parseName(line);
         String value = ParserUtilities.parseType(line);
         ElementType type;

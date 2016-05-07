@@ -121,6 +121,8 @@ public final class NavigationWindowTopComponent extends TopComponent implements 
             this.repaint();
        }catch(IOException e){
            // can't do much
+           this.root.setDisplayName("Parsing Failed.");
+           // add error message box notifying user
        }
     }//GEN-LAST:event_jButton1ActionPerformed
 // TODO: listen for 
