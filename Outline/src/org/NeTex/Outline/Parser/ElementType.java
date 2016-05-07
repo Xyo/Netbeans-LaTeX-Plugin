@@ -16,7 +16,7 @@ public enum ElementType{
         public static int getLevel(ElementType type){
             switch(type){
                 case ROOT:
-                    return -9000;
+                    return -9001;
                 case PART:
                     return -1;
                 case CHAPTER:

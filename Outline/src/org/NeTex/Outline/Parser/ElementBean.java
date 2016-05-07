@@ -94,7 +94,7 @@ public class ElementBean {
     }
     
     public int getLevel(){
-        return ElementType.getLevel(getType());
+        return ElementType.getLevel(this.getType());
     }
     
 }

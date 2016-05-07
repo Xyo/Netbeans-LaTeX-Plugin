@@ -9,6 +9,7 @@ import java.util.List;
 import org.openide.nodes.ChildFactory;
 import org.openide.nodes.Node;
 import org.NeTex.Outline.Parser.ElementBean;
+import org.openide.nodes.Children;
 
 /**
  *
@@ -27,14 +28,14 @@ public class ElementNodeChildFactory extends ChildFactory<ElementBean>{
     protected boolean createKeys(List<ElementBean> list) {
         try{
             List<ElementBean> children = element.getChildren();
-            if( children == null ){
+            if( children == null || children.isEmpty() ){
                 return false;
             }else{
                 list.addAll(children);
                 return true;
             }
         }catch( NullPointerException e ){
-            
+            e.printStackTrace();
         }
         return false;
     }

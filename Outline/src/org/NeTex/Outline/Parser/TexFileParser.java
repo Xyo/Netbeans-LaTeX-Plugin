@@ -8,6 +8,7 @@ package org.NeTex.Outline.Parser;
 import org.NeTex.Outline.Window.ElementNodeChildFactory;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.EmptyStackException;
 import java.util.Stack;
 import org.NeTex.Outline.Window.ElementNode;
 
@@ -29,31 +30,31 @@ public class TexFileParser {
         stack.push(rootBean);
     }
     
+    
     // parses the tex file to build the tree structure
     public ElementNode beginParse() {
-        
+       
         try( BufferedReader br = 
-                new BufferedReader(new FileReader("C:\\Users\\Jeremy\\Documents\\NetBeansProjects\\NeTex\\sample.tex")   )){
+            new BufferedReader(new FileReader("C:\\Users\\Jeremy\\Documents\\NetBeansProjects\\NeTex\\sample.tex")   )){
 
             String line = br.readLine();
             // keep reading until end of file
-            while( line != null ){
+            while(!line.equals("\\end{document}")){
                 ++lineCounter;
                 if( ParserUtilities.partFound(line) ){
                     parseLine(line);
                 }
                 line = br.readLine();
-            }
-           ElementNode newRoot = new ElementNode(this.rootBean);
-           return newRoot;
+            }           
         }catch( IOException e ){
             e.printStackTrace();
         }catch(StringIndexOutOfBoundsException s){
             s.printStackTrace();
+        }catch(NullPointerException n){
+            n.printStackTrace();
         }
-        return new ElementNode(new ElementBean(ElementType.ROOT, "New root", 0, false));
+        return new ElementNode(this.rootBean);
     }
-    
 
     // Gets the next non-empty line in the document
     public boolean parseLine(String line) throws IOException {
@@ -92,19 +93,31 @@ public class TexFileParser {
     
     // pop elements from the stack until an element with higher level is found
     public void addElementToStack(ElementBean element){
-        if(!stack.isEmpty()){
+        try{
             ElementBean currNode = stack.peek();
+            while( advanceStack(element.getLevel()) ){
+                advanceStack(element.getLevel());
+            }
+            
+            // remaining node at top of stack should be the parent element
+            currNode = stack.peek();
             currNode.addChild(element);
             stack.push(element);
-            // remove previous nodes that are higher level than the new node being added
-//            while( currNode.getLevel() >= element.getLevel() ){
-//                currNode = stack.peek();
-//                if( currNode.getType() != ElementType.ROOT ) currNode.setComplete(this.lineCounter);
-//                stack.pop();
-//            }
-            // remaining node at top of stack should be the parent element
-            
+        }catch( EmptyStackException e ){
+            e.printStackTrace();
         }
+    }
+    
+    // remove previous nodes that are higher level than the new node being added
+    public boolean advanceStack( int elementLevel ) throws EmptyStackException {
+        ElementBean currNode = stack.peek();
+        int currLevel = ElementType.getLevel(currNode.getType());
+        
+        if( currLevel >= elementLevel ){
+            stack.pop().setComplete(this.lineCounter);
+            return true;
+        }
+        return false;
     }
     
     

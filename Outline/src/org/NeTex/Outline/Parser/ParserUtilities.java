@@ -9,15 +9,18 @@ public class ParserUtilities {
     public static boolean partFound( String line ){
         if( line.contains("\\part")
                 || line.contains("\\chapter")
-                || line.contains("\\section") ){
-                return true; 
+                || line.contains("\\section")
+                || line.contains("\\subsection")
+                || line.contains("\\subsubsection")
+                || line.contains("\\paragraph")
+                || line.contains("\\subparagraph")  ){
+            
+            return true;
+        }else{
+            return false;
         }
-        return false;
+        
     }
-//                || line.contains("\\subsection")
-//                || line.contains("\\subsubsection")
-//                || line.contains("\\paragraph")
-//                || line.contains("\\subparagraph")
 //                || line.contains("\\backmatter")
 //                || line.contains("\\frontmatter")
 //                || line.contains("\\appendix")
@@ -116,20 +119,20 @@ public class ParserUtilities {
                 return ElementType.CHAPTER;
             case("SECTION"):
                 return ElementType.SECTION;
-//            case("SUBSECTION"):
-//                return ElementBean.ElementType.SUBSECTION;
-//            case("SUBSUBSECTION"):
-//                return ElementBean.ElementType.SUBSUBSECTION;
-//            case("PARAGRAPH"):
-//                return ElementBean.ElementType.PARAGRAPH;
-//            case("SUBPARAGRAPH"):
-//                return ElementBean.ElementType.SUBPARAGRAPH;
-//            case("FIGURE"):
-//                return ElementBean.ElementType.FIGURE;
-//            case("LIST"):
-//                return ElementBean.ElementType.LIST;
-//            case("TABLE"):
-//                return ElementBean.ElementType.TABLE;
+            case("SUBSECTION"):
+                return ElementType.SUBSECTION;
+            case("SUBSUBSECTION"):
+                return ElementType.SUBSUBSECTION;
+            case("PARAGRAPH"):
+                return ElementType.PARAGRAPH;
+            case("SUBPARAGRAPH"):
+                return ElementType.SUBPARAGRAPH;
+            case("FIGURE"):
+                return ElementType.FIGURE;
+            case("LIST"):
+                return ElementType.LIST;
+            case("TABLE"):
+                return ElementType.TABLE;
                 
                 // TODO: fix illegal arguments
             default:

@@ -58,17 +58,16 @@ public final class NavigationWindowTopComponent extends TopComponent implements 
     private Lookup.Result currentContext;
     /** listener to context changes */
     private LookupListener contextListener;
-    //private static final RequestProcessor threadRequest = new RequestProcessor(NavigationWindowTopComponent.class);
-    //private volatile RequestProcessor.Task last;
     private final ExplorerManager manager = new ExplorerManager();
-    private ElementNode root = new ElementNode();
+    private ElementNode root;
     
     public NavigationWindowTopComponent() {
         initComponents();
         setName(Bundle.CTL_NavigationWindowTopComponent());
         setToolTipText(Bundle.HINT_NavigationWindowTopComponent());
+        
+        this.root = new ElementNode();
         manager.setRootContext(root);
-
         setDisplayName("Example");
     }
 
@@ -113,7 +112,12 @@ public final class NavigationWindowTopComponent extends TopComponent implements 
         try{
             TexFileParser parser = new TexFileParser(new TexFile("example.tex"));
             ElementNode newRoot = parser.beginParse();
-            if( newRoot != null ) this.root = newRoot;
+            if( newRoot != null ){
+                this.root = newRoot;
+            }else{
+                this.root.setDisplayName("Parsing Failed.");
+            }
+            manager.setRootContext(newRoot);
             this.repaint();
        }catch(IOException e){
            // can't do much

@@ -1,5 +1,6 @@
 package org.NeTex.Outline.Window;
 
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -32,6 +33,11 @@ public class ElementNode extends AbstractNode {
     
     public int getLineNumber(){
         return element.getStart();
+    }
+    
+    @Override
+    public Image getIcon(int type){
+        return ImageUtilities.loadImage("C:\\Users\\Jeremy\\Documents\\NetBeansProjects\\NeTex\\nodeImage.png");
     }
  
 //    @Override
