@@ -21,7 +21,7 @@ public class TexFileParser {
     private final ElementBean rootBean;
     private ArrayList<ElementBean> beginEndElements = new ArrayList<>();
     private String filename = "";
-    
+    private String title = "";
     Stack<ElementBean> stack = new Stack<>();
     
     
@@ -41,7 +41,7 @@ public class TexFileParser {
        
         try( BufferedReader br = 
             new BufferedReader(new FileReader(this.filename))){
-
+            
             String line = br.readLine();
             // keep reading until end of file
             while(!line.equals("\\end{document}") ){
@@ -59,7 +59,9 @@ public class TexFileParser {
             n.printStackTrace();
             return new ElementNode(this.rootBean);
         }
-        return new ElementNode(this.rootBean);
+        ElementNode root = new ElementNode(this.rootBean);
+        root.setDisplayName(title);
+        return root;
     }
 
     // Gets the next non-empty line in the document
@@ -94,7 +96,6 @@ public class TexFileParser {
         }
         
         ElementBean elem = new ElementBean(type, name, lineCounter, true);
-        
         if( elem == null ){
             throw new IllegalArgumentException("Invalid paramaters here... " + type + name + lineCounter + "false" );
         }
@@ -103,6 +104,10 @@ public class TexFileParser {
     
     // pop elements from the stack until an element with higher level is found
     private void addElementToStack(ElementBean element){
+         if( element.getType() == ElementType.TITLE ){
+            this.title = element.getName();
+            return;
+        }
         try{
             ElementBean currNode = stack.peek();
             while( advanceStack(element.getLevel()) ){
@@ -145,6 +150,10 @@ public class TexFileParser {
     // get end of preamble (and beginning of doc)
     private void toBeginOfDoc( BufferedReader br ) throws IOException {
         
+    }
+    
+    public String getTitle(){
+        return this.title;
     }
 }
 

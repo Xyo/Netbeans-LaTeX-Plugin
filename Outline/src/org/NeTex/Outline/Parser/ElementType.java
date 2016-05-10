@@ -10,7 +10,7 @@ package org.NeTex.Outline.Parser;
  * @author Jeremy
  */
 public enum ElementType{
-        ROOT, PART, CHAPTER, SECTION, SUBSECTION, SUBSUBSECTION, PARAGRAPH, 
+        ROOT, TITLE, PART, CHAPTER, SECTION, SUBSECTION, SUBSUBSECTION, PARAGRAPH, 
         SUBPARAGRAPH, DESCRIPTION, FIGURE, LIST, TABLE;
         
         public static int getLevel(ElementType type){

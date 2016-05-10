@@ -14,6 +14,7 @@ public class ParserUtilities {
                 || line.contains("\\subsubsection")
                 || line.contains("\\paragraph")
                 || line.contains("\\subparagraph")  
+                || line.contains("\\title")
                 || isBeginningElement(line)
                 || isEndingElement(line)    ){
             return true;
@@ -119,7 +120,8 @@ public class ParserUtilities {
                 return ElementType.LIST;
             case("TABLE"):
                 return ElementType.TABLE;
-                
+            case("TITLE"):
+                return ElementType.TITLE;
                
             default:
                 return ElementType.TABLE;

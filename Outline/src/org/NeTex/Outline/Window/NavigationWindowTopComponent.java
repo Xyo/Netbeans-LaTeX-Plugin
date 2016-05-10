@@ -90,6 +90,7 @@ public final class NavigationWindowTopComponent extends TopComponent
                 this.root = newRoot;
             }
             manager.setRootContext(newRoot);
+            this.root.setDisplayName(parser.getTitle());
             this.repaint();
        }catch(Exception e){
            // can't do much
@@ -148,20 +149,7 @@ public final class NavigationWindowTopComponent extends TopComponent
     private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
-    
-    
-    // try to get default main project
-    public boolean getMainProjectFile(){
-        Project mainProject = OpenProjects.getDefault().getMainProject();
-        if( mainProject != null ){
-            FileObject projectDir = mainProject.getProjectDirectory();
-            String projectLocation = projectDir.getPath();
-            //this.file = FileUtil.toFileObject(new File(projectLocation));
-            return true;
-        }else{
-            return false;
-        }
-    }
+
     
     
     @Override
