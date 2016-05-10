@@ -72,21 +72,26 @@ public final class NavigationWindowTopComponent extends TopComponent
         
         this.root = new ElementNode();
         manager.setRootContext(root);
-        getProjectFile();
         setDisplayName("Example");
     }
     
     public void getProjectFile(){
-        Lookup lookup = Utilities.actionsGlobalContext(); 
-        Project project = lookup.lookup(Project.class);
+        Lookup lkp = Utilities.actionsGlobalContext(); 
+        Project project = lkp.lookup(Project.class);
         if( project != null ){
             this.file = project.getProjectDirectory();
         }
-        
-        
-        // add a file change listener to the folder, otherwise there will be two updates for every change
-        // (One for the file, and one for the folder)
+        createFileListener();
+    }
+    
+    // add a file change listener to the folder, otherwise there will be two updates for every change
+    // (One for the file, and one for the folder)
+    public void createFileListener(){
+        if( file == null ){
+            this.file = FileUtil.toFileObject(new File("C:\\Users\\Jeremy\\Documents\\NetBeansProjects\\NeTex\\sample.tex"));
+        }
         FileObject folder = file.getParent();
+        if( folder == null ) return;
         folder.addFileChangeListener(new FileChangeAdapter() {
             
             @Override
@@ -113,7 +118,6 @@ public final class NavigationWindowTopComponent extends TopComponent
             System.out.println("Project location: " + projectLocation);
             return true;
         }else{
-            this.file = FileUtil.toFileObject(new File("C:\\Users\\Jeremy\\Documents\\NetBeansProjects\\NeTex\\sample.tex"));
             return false;
         }
     }
