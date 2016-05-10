@@ -5,37 +5,43 @@ package org.NeTex.Outline.Parser;
  * @author Jeremy
  */
 
-import org.NeTex.Outline.Window.ElementNodeChildFactory;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.EmptyStackException;
 import java.util.Stack;
 import org.NeTex.Outline.Window.ElementNode;
-
+import org.NeTex.*;
+import org.latex.filetype.TexDataObject;
+import org.openide.filesystems.FileObject;
+        
 public class TexFileParser {
     private TexFile doc;
     private BufferedReader br;
     private int lineCounter = 0;
-    private ElementBean rootBean;
-    private ArrayList<ElementBean> addedBeans = new ArrayList<>();
+    private final ElementBean rootBean;
+    private ArrayList<ElementBean> beginEndElements = new ArrayList<>();
+    private String filename = "";
     
     Stack<ElementBean> stack = new Stack<>();
     
     
-    public TexFileParser( TexFile doc ) throws FileNotFoundException {
-        if( doc == null ) throw new FileNotFoundException( "The file is missing" );
-        this.doc = doc;
+    public TexFileParser(FileObject file) throws IOException {
+        String filename = file.getPath();
+        if( filename != null ){
+            this.filename = filename;
+        }else{
+            throw new IOException("File does not exist.");
+        }
         // push root bean to stack
         rootBean = new ElementBean();
         stack.push(rootBean);
     }
-    
-    
+
     // parses the tex file to build the tree structure
-    public ElementNode beginParse() {
+    public ElementNode beginParsing() {
        
         try( BufferedReader br = 
-            new BufferedReader(new FileReader("C:\\Users\\Jeremy\\Documents\\NetBeansProjects\\NeTex\\sample.tex")   )){
+            new BufferedReader(new FileReader(this.filename))){
 
             String line = br.readLine();
             // keep reading until end of file
@@ -58,7 +64,7 @@ public class TexFileParser {
     }
 
     // Gets the next non-empty line in the document
-    public boolean parseLine(String line) throws IOException, NullPointerException {
+    private boolean parseLine(String line) throws IOException, NullPointerException {
         
         ElementBean element = null;
         // if an element type has been found, create new node and/or finish old node
@@ -72,8 +78,12 @@ public class TexFileParser {
         return true;
     }
     
+    private boolean beginFoundElement(String line){
+        return false;
+    }
     
-    public ElementBean createElement(String line) throws IllegalArgumentException, NullPointerException {
+    
+    private ElementBean createElement(String line) throws IllegalArgumentException, NullPointerException {
         String name = ParserUtilities.parseName(line);
         String value = ParserUtilities.parseType(line);
         ElementType type;
@@ -93,7 +103,7 @@ public class TexFileParser {
     }
     
     // pop elements from the stack until an element with higher level is found
-    public void addElementToStack(ElementBean element){
+    private void addElementToStack(ElementBean element){
         try{
             ElementBean currNode = stack.peek();
             while( advanceStack(element.getLevel()) ){
@@ -110,7 +120,7 @@ public class TexFileParser {
     }
     
     // remove previous nodes that are higher level than the new node being added
-    public boolean advanceStack( int elementLevel ) throws EmptyStackException {
+    private boolean advanceStack( int elementLevel ) throws EmptyStackException {
         ElementBean currNode = stack.peek();
         int currLevel = ElementType.getLevel(currNode.getType());
         
@@ -123,7 +133,7 @@ public class TexFileParser {
     
     
      //get document class type to name tex tree
-    public String getDocClass(BufferedReader br) throws IOException {
+    private String getDocClass(BufferedReader br) throws IOException {
         String line = "";
         do{
             ++lineCounter;
@@ -134,7 +144,7 @@ public class TexFileParser {
     }
 
     // get end of preamble (and beginning of doc)
-    public void toBeginOfDoc( BufferedReader br ) throws IOException {
+    private void toBeginOfDoc( BufferedReader br ) throws IOException {
         
     }
 }

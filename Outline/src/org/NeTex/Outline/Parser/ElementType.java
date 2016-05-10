@@ -18,15 +18,21 @@ public enum ElementType{
                 case ROOT:
                     return -9001;
                 case PART:
-                    return -1;
-                case CHAPTER:
                     return 0;
-                case SECTION:
+                case CHAPTER:
                     return 1;
-                case PARAGRAPH:
+                case SECTION:
                     return 2;
-                default:
+                case SUBSECTION:
+                    return 3;
+                case SUBSUBSECTION:
+                    return 4;
+                case PARAGRAPH:
+                    return 5;
+                case SUBPARAGRAPH:
                     return 6;
+                default:
+                    return 7;
             }
         }
     }

@@ -13,8 +13,9 @@ public class ParserUtilities {
                 || line.contains("\\subsection")
                 || line.contains("\\subsubsection")
                 || line.contains("\\paragraph")
-                || line.contains("\\subparagraph")  ){
-            
+                || line.contains("\\subparagraph")  
+                || isBeginningElement(line)
+                || isEndingElement(line)    ){
             return true;
         }else{
             return false;
@@ -28,47 +29,32 @@ public class ParserUtilities {
 //                || line.contains("\\appendix")
 //                || line.contains("\\closing")
 //                || line.contains("\\glossary{")
-//                || line.contains("\\end{")
 //                || line.contains("\\bibliography{")
-//                || beginFound(line)     
+//                    
                 
 
             
 
     // ******** For tex file parser ********
     
-    //            if( ParserUtilities.isEndingElement(line) ){
-//                ElementNode correspondingNode = addedNodeByName(name);
-//                correspondingNode.setComplete(lineCounter);
-//            }
-//            
-//            if( ParserUtilities.beginFound(line) ){
-//                newNode = factory.createNode(name, type, lineCounter, emptyLineFound);
-//            }else if( ParserUtilities.isEndingElement(line) ){
-//
-//            }
+               
+////            
+////            if( ParserUtilities.beginFound(line) ){
+////                newNode = factory.createNode(name, type, lineCounter, emptyLineFound);
+////            }else if( ParserUtilities.isEndingElement(line) ){
+////
+////            }
 
-//    public static boolean beginFound( String line ){
-//        if( line.contains("\\begin{description}")
-//                || line.contains("\\begin{document}")
-//                || line.contains("\\begin{figure")
-//                || line.contains("begin{list}")
-//                || line.contains("begin{table")
-//                || line.contains("begin{titlepage") ){
-//            return true;
-//        }
-//        return false;
-//    }
     
-//    public static boolean isEndingElement( String element ){
-//        if( element.contains("\\end")) return true;
-//        return false;
-//    }
-//
-//    public static boolean isBeginningElement( String element ){
-//        if( element.contains("\\begin") ) return true;
-//        return false;
-//    }
+    public static boolean isEndingElement( String element ){
+        if( element.contains("\\end")) return true;
+        return false;
+    }
+
+    public static boolean isBeginningElement( String element ){
+        if( element.contains("\\begin") ) return true;
+        return false;
+    }
 
     public static String parseName(String line){
         
@@ -134,7 +120,7 @@ public class ParserUtilities {
             case("TABLE"):
                 return ElementType.TABLE;
                 
-                // TODO: fix illegal arguments
+               
             default:
                 return ElementType.TABLE;
         }

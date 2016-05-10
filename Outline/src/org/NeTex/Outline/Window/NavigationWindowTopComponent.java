@@ -5,29 +5,35 @@
  */
 package org.NeTex.Outline.Window;
 
+import java.io.File;
 import java.io.IOException;
-//import javax.swing.JComponent;
-import org.NeTex.Outline.Parser.ElementBean;
+import java.util.Collection;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
-//import java.util.Collection;
 import javax.swing.JComponent;
-import javax.swing.JLabel;
-import org.NeTex.Outline.Parser.TexFile;
 import org.NeTex.Outline.Parser.TexFileParser;
-import org.NeTex.Outline.Window.Bundle;
+import org.latex.filetype.TexDataObject;
+import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.spi.navigator.NavigatorPanel;
+import org.openide.*;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.view.BeanTreeView;
+import org.openide.filesystems.FileAttributeEvent;
+import org.openide.filesystems.FileChangeAdapter;
+import org.openide.filesystems.FileEvent;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.util.Lookup;
-//import org.openide.util.LookupEvent;
+import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
-//import org.openide.util.RequestProcessor;
+import org.openide.util.Utilities;
 
 /**
+ * 
  * Top component which displays something.
  */
 @ConvertAsProperties(
@@ -51,15 +57,13 @@ import org.openide.util.LookupListener;
     "CTL_NavigationWindowTopComponent=NavigationWindow Window",
     "HINT_NavigationWindowTopComponent=This is a NavigationWindow window"
 })
-public final class NavigationWindowTopComponent extends TopComponent implements NavigatorPanel, ExplorerManager.Provider {
+public final class NavigationWindowTopComponent extends TopComponent 
+        implements NavigatorPanel, ExplorerManager.Provider {
     
-    private static final Lookup.Template elementData = new Lookup.Template(ElementBean.class);
-     /** current context to work on */
-    private Lookup.Result currentContext;
-    /** listener to context changes */
-    private LookupListener contextListener;
+    private TexDataObject project;
     private final ExplorerManager manager = new ExplorerManager();
     private ElementNode root;
+    private FileObject file;
     
     public NavigationWindowTopComponent() {
         initComponents();
@@ -68,9 +72,72 @@ public final class NavigationWindowTopComponent extends TopComponent implements 
         
         this.root = new ElementNode();
         manager.setRootContext(root);
+        getProjectFile();
         setDisplayName("Example");
     }
+    
+    public void getProjectFile(){
+        Lookup lookup = Utilities.actionsGlobalContext(); 
+        Project project = lookup.lookup(Project.class);
+        if( project != null ){
+            this.file = project.getProjectDirectory();
+        }
+        
+        
+        // add a file change listener to the folder, otherwise there will be two updates for every change
+        // (One for the file, and one for the folder)
+        FileObject folder = file.getParent();
+        folder.addFileChangeListener(new FileChangeAdapter() {
+            
+            @Override
+            public void fileChanged(FileEvent ev) {
+                reconstructOutline();
+            }
+            
+            @Override
+            public void fileAttributeChanged(FileAttributeEvent ev) {
+                System.out.println(ev.getName() + ": " + ev.getOldValue() + " -> " + ev.getNewValue());
+            }
+        });
+    }
+   
+    
+    // try to get default main project
+    public boolean getMainProjectFile(){
+        
+        Project mainProject = OpenProjects.getDefault().getMainProject();
+        if( mainProject != null ){
+            FileObject projectDir = mainProject.getProjectDirectory();
+            String projectLocation = projectDir.getPath();
+            this.file = FileUtil.toFileObject(new File(projectLocation));
+            System.out.println("Project location: " + projectLocation);
+            return true;
+        }else{
+            this.file = FileUtil.toFileObject(new File("C:\\Users\\Jeremy\\Documents\\NetBeansProjects\\NeTex\\sample.tex"));
+            return false;
+        }
+    }
+    
+    public void reconstructOutline(){
+        getProjectFile();
+        try{
+            
+            TexFileParser parser = new TexFileParser(this.file);
+            
+            ElementNode newRoot = parser.beginParsing();
+            if( newRoot != null ){
+                this.root = newRoot;
+            }
+            manager.setRootContext(newRoot);
+            this.repaint();
+       }catch(Exception e){
+           // can't do much
+           this.root.setDisplayName("Parsing Failed.");
+           // add error message box notifying user
+       }
+    }
 
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -82,7 +149,10 @@ public final class NavigationWindowTopComponent extends TopComponent implements 
         jButton1 = new javax.swing.JButton();
         jScrollPane1 = new BeanTreeView();
 
+        jButton1.setBackground(new java.awt.Color(0, 0, 0));
+        jButton1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jButton1, org.openide.util.NbBundle.getMessage(NavigationWindowTopComponent.class, "NavigationWindowTopComponent.jButton1.text")); // NOI18N
+        jButton1.setToolTipText(org.openide.util.NbBundle.getMessage(NavigationWindowTopComponent.class, "NavigationWindowTopComponent.jButton1.toolTipText")); // NOI18N
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -93,11 +163,11 @@ public final class NavigationWindowTopComponent extends TopComponent implements 
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 399, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addGap(148, 148, 148)
+                .addGap(119, 119, 119)
                 .addComponent(jButton1)
-                .addContainerGap(178, Short.MAX_VALUE))
-            .addComponent(jScrollPane1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -109,35 +179,27 @@ public final class NavigationWindowTopComponent extends TopComponent implements 
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        try{
-            TexFileParser parser = new TexFileParser(new TexFile("example.tex"));
-            ElementNode newRoot = parser.beginParse();
-            if( newRoot != null ){
-                this.root = newRoot;
-            }else{
-                this.root.setDisplayName("Parsing Failed.");
-            }
-            manager.setRootContext(newRoot);
-            this.repaint();
-       }catch(IOException e){
-           // can't do much
-           this.root.setDisplayName("Parsing Failed.");
-           // add error message box notifying user
-       }
+        reconstructOutline();
     }//GEN-LAST:event_jButton1ActionPerformed
 // TODO: listen for 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
+   
+    // trigger for file changing
+    public void fileChanged(FileEvent ev) {
+        System.out.println("Contents of " + ev.getFile() + " changed.");
+    }
+    
+    
     @Override
     public void componentOpened() {
-        // TODO add custom code on component opening
     }
+    
 
     @Override
     public void componentClosed() {
-        // TODO add custom code on component closing
     }
 
     void writeProperties(java.util.Properties p) {
@@ -164,36 +226,13 @@ public final class NavigationWindowTopComponent extends TopComponent implements 
 
     @Override
     public void panelActivated(Lookup lkp) {
-        // listen to changes on lookup context
-//        currentContext = lkp.lookup(elementData);
-//        currentContext.addLookupListener(getContextListener());
-//        // get the data
-//        Collection data = currentContext.allInstances();
-//        setDataContent(data);
+      
     }
 
     @Override
     public void panelDeactivated() {
-//        currentContext.removeLookupListener(getContextListener());
-//        currentContext = null;
+        
     }
-    
-    
-    // TODO: have processing done at a different stage - when file is opened (-> editor)
-    /*
-     last = threadRequest.post(runnable, 0);
-        threadRequest.post(runnable, 0);
-
-        // wait until process is done
-        last.waitFinished();
-        */
-    
-//    private LookupListener getContextListener () {
-//        if (contextListener == null) {
-//            contextListener = new ContextListener();
-//        }
-//        return contextListener;
-//    }
 
     // I WOULD LIKE TO SPEAK TO YOUR MANAGER  
     @Override
@@ -201,13 +240,5 @@ public final class NavigationWindowTopComponent extends TopComponent implements 
        return manager;
     }
       
-//    private class ContextListener implements LookupListener {
-//        
-//        @Override
-//        public void resultChanged(LookupEvent ev) {
-//            Collection data = ((Lookup.Result)ev.getSource()).allInstances();
-//            
-//        }
-//        
-//    }
+
 }
