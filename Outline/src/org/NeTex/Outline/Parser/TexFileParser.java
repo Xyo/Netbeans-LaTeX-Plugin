@@ -25,8 +25,7 @@ public class TexFileParser {
     Stack<ElementBean> stack = new Stack<>();
     
     
-    public TexFileParser(FileObject file) throws IOException {
-        String filename = file.getPath();
+    public TexFileParser(String filename) throws IOException {
         if( filename != null ){
             this.filename = filename;
         }else{

@@ -39,6 +39,10 @@ public class ElementNode extends AbstractNode {
     public Image getIcon(int type){
         return ImageUtilities.loadImage("C:\\Users\\Jeremy\\Documents\\NetBeansProjects\\NeTex\\nodeimage.png");
     }
+    
+    @Override public Image getOpenedIcon(int i) { 
+        return getIcon(i); 
+    }
  
 //    @Override
 //    public Action[] getActions(boolean popup){

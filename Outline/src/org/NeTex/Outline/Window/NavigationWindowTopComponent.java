@@ -22,11 +22,9 @@ import org.netbeans.spi.navigator.NavigatorPanel;
 import org.openide.*;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.view.BeanTreeView;
-import org.openide.filesystems.FileAttributeEvent;
-import org.openide.filesystems.FileChangeAdapter;
-import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.loaders.DataObject;
 import org.openide.util.Lookup;
 import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
@@ -58,12 +56,15 @@ import org.openide.util.Utilities;
     "HINT_NavigationWindowTopComponent=This is a NavigationWindow window"
 })
 public final class NavigationWindowTopComponent extends TopComponent 
-        implements NavigatorPanel, ExplorerManager.Provider {
+        implements NavigatorPanel, ExplorerManager.Provider, LookupListener {
     
     private TexDataObject project;
     private final ExplorerManager manager = new ExplorerManager();
     private ElementNode root;
-    private FileObject file;
+    private String filename = "";
+    private String sampleFile = "C:\\Users\\Jeremy\\Documents\\NetBeansProjects\\NeTex\\sample.tex";
+    private Lookup.Result<TexDataObject> result;
+    
     
     public NavigationWindowTopComponent() {
         initComponents();
@@ -75,58 +76,14 @@ public final class NavigationWindowTopComponent extends TopComponent
         setDisplayName("Example");
     }
     
-    public void getProjectFile(){
-        Lookup lkp = Utilities.actionsGlobalContext(); 
-        Project project = lkp.lookup(Project.class);
-        if( project != null ){
-            this.file = project.getProjectDirectory();
-        }
-        createFileListener();
-    }
-    
-    // add a file change listener to the folder, otherwise there will be two updates for every change
-    // (One for the file, and one for the folder)
-    public void createFileListener(){
-        if( file == null ){
-            this.file = FileUtil.toFileObject(new File("C:\\Users\\Jeremy\\Documents\\NetBeansProjects\\NeTex\\sample.tex"));
-        }
-        FileObject folder = file.getParent();
-        if( folder == null ) return;
-        folder.addFileChangeListener(new FileChangeAdapter() {
-            
-            @Override
-            public void fileChanged(FileEvent ev) {
-                reconstructOutline();
-            }
-            
-            @Override
-            public void fileAttributeChanged(FileAttributeEvent ev) {
-                System.out.println(ev.getName() + ": " + ev.getOldValue() + " -> " + ev.getNewValue());
-            }
-        });
-    }
-   
-    
-    // try to get default main project
-    public boolean getMainProjectFile(){
-        
-        Project mainProject = OpenProjects.getDefault().getMainProject();
-        if( mainProject != null ){
-            FileObject projectDir = mainProject.getProjectDirectory();
-            String projectLocation = projectDir.getPath();
-            this.file = FileUtil.toFileObject(new File(projectLocation));
-            System.out.println("Project location: " + projectLocation);
-            return true;
-        }else{
-            return false;
-        }
-    }
     
     public void reconstructOutline(){
-        getProjectFile();
+        //if( !getMainProjectFile() ) getProjectFile();
         try{
-            
-            TexFileParser parser = new TexFileParser(this.file);
+            if( filename.isEmpty() || filename == null ){
+                filename = this.sampleFile;
+            }
+            TexFileParser parser = new TexFileParser(filename);
             
             ElementNode newRoot = parser.beginParsing();
             if( newRoot != null ){
@@ -136,6 +93,7 @@ public final class NavigationWindowTopComponent extends TopComponent
             this.repaint();
        }catch(Exception e){
            // can't do much
+           e.printStackTrace();
            this.root.setDisplayName("Parsing Failed.");
            // add error message box notifying user
        }
@@ -190,15 +148,26 @@ public final class NavigationWindowTopComponent extends TopComponent
     private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
-   
-    // trigger for file changing
-    public void fileChanged(FileEvent ev) {
-        System.out.println("Contents of " + ev.getFile() + " changed.");
+    
+    
+    // try to get default main project
+    public boolean getMainProjectFile(){
+        Project mainProject = OpenProjects.getDefault().getMainProject();
+        if( mainProject != null ){
+            FileObject projectDir = mainProject.getProjectDirectory();
+            String projectLocation = projectDir.getPath();
+            //this.file = FileUtil.toFileObject(new File(projectLocation));
+            return true;
+        }else{
+            return false;
+        }
     }
     
     
     @Override
     public void componentOpened() {
+        result = Utilities.actionsGlobalContext().lookupResult(TexDataObject.class);
+        result.addLookupListener(this);
     }
     
 
@@ -233,16 +202,33 @@ public final class NavigationWindowTopComponent extends TopComponent
       
     }
 
+    
     @Override
     public void panelDeactivated() {
         
     }
 
+    
     // I WOULD LIKE TO SPEAK TO YOUR MANAGER  
     @Override
     public ExplorerManager getExplorerManager() {
        return manager;
     }
       
+    
+    @Override
+    public void resultChanged(LookupEvent le) {
+        Lookup.Result<TexDataObject> source = (Lookup.Result) le.getSource();
 
+        Collection instances = source.allInstances();
+        if (instances.isEmpty()) return;
+        Object obj = instances.iterator().next();
+
+        if (obj instanceof DataObject){
+          TexDataObject tobj = Utilities.actionsGlobalContext().lookup(TexDataObject.class);
+          this.filename = FileUtil.toFile(tobj.getPrimaryFile()).getAbsolutePath();
+          reconstructOutline();
+        }
+        
+    }
 }
