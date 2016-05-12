@@ -8,7 +8,6 @@ package org.NeTex.Compilation;
 import java.util.Collection;
 import org.latex.filetype.TexDataObject;
 import org.netbeans.api.settings.ConvertAsProperties;
-import org.openide.*;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.filesystems.FileAttributeEvent;
@@ -16,7 +15,6 @@ import org.openide.filesystems.FileChangeListener;
 import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileRenameEvent;
-import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 import org.openide.util.Lookup;
 import org.openide.util.LookupEvent;
@@ -119,6 +117,7 @@ public final class CompilationWindowTopComponent extends TopComponent implements
         result.addLookupListener(this);
     }
     
+    @Override
     public void resultChanged(LookupEvent le) {
         Lookup.Result<TexDataObject> source = (Lookup.Result) le.getSource();
 
@@ -127,11 +126,21 @@ public final class CompilationWindowTopComponent extends TopComponent implements
         Object obj = instances.iterator().next();
 
         if (obj instanceof DataObject){
-          TexDataObject tobj = Utilities.actionsGlobalContext().lookup(TexDataObject.class);
-          DataObject data = (DataObject)tobj;
-          this.file = tobj.getPrimaryFile();
-          FileObject folder = this.file.getParent();
-          folder.addFileChangeListener(new FileChangeListener(){
+            try{
+                TexDataObject tobj = Utilities.actionsGlobalContext().lookup(TexDataObject.class);
+                this.file = tobj.getPrimaryFile();
+                FileObject folder = this.file.getParent();
+                addFileListener(folder);
+            }catch(Exception e){
+                //folder not found
+            }
+          
+        }
+        
+    }
+    
+    public void addFileListener(FileObject folder){
+        folder.addFileChangeListener(new FileChangeListener(){
               @Override
               public void fileAttributeChanged(FileAttributeEvent e){
                   
@@ -142,12 +151,20 @@ public final class CompilationWindowTopComponent extends TopComponent implements
               }
               @Override
               public void fileDataCreated(FileEvent fe){
-                  // if a new file is created, get name of new file and begin parse
-                  FileObject newFile = fe.getFile();
-                  String filename = newFile.getPath();
-                  ReadLogFile logReader = new ReadLogFile(filename);
-                  String errors = logReader.readFile();
-                  addErrorsToWindow(errors);
+                    // if a new file is created, get name of new file and begin parse
+                    try{
+                        FileObject newFile = fe.getFile();
+                        String filename = newFile.getPath();
+                        int index = filename.indexOf(".");
+                        if( filename.substring(index).equals(".log")){
+                            ReadLogFile logReader = new ReadLogFile(filename);
+                            String errors = logReader.readFile();
+                            addErrorsToWindow(errors);
+                        }
+                    }catch(Exception e){
+                        // failed.
+                        return;
+                    }
               }
 
               @Override
@@ -165,7 +182,5 @@ public final class CompilationWindowTopComponent extends TopComponent implements
                   throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
               }
           });
-        }
-        
     }
 }

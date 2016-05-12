@@ -5,8 +5,6 @@
  */
 package org.NeTex.Outline.Window;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Collection;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
@@ -16,13 +14,9 @@ import org.openide.util.NbBundle.Messages;
 import javax.swing.JComponent;
 import org.NeTex.Outline.Parser.TexFileParser;
 import org.latex.filetype.TexDataObject;
-import org.netbeans.api.project.Project;
-import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.spi.navigator.NavigatorPanel;
-import org.openide.*;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.view.BeanTreeView;
-import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 import org.openide.util.Lookup;
