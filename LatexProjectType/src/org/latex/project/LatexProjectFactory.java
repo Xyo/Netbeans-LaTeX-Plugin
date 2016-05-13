@@ -1,4 +1,4 @@
-package org.NeTex.Project;
+package org.latex.project;
 
 import java.io.IOException; 
 import org.netbeans.api.project.Project; 

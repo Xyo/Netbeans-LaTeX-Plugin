@@ -1,4 +1,4 @@
-package org.NeTex.Project;
+package org.latex.project;
 
 import java.beans.PropertyChangeListener;
 import javax.swing.Icon;
@@ -42,7 +42,7 @@ public class LatexProject implements Project {
     
     private final class Info implements ProjectInformation {
         @StaticResource()
-        public static final String LATEX_ICON = "org/NeTex/Project/l_black.png";
+        public static final String LATEX_ICON = "org/latex/project/l_black.png";
         @Override 
         public Icon getIcon() { 
             return new ImageIcon(ImageUtilities.loadImage(LATEX_ICON));

@@ -22,6 +22,7 @@ import org.openide.util.LookupListener;
 import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.Utilities;
+import org.openide.nodes.Node;
 
 /**
  * Top component which displays something.
